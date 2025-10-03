@@ -1,32 +1,16 @@
 from src.categories_products import Category, Product
+from src.load_data import load_data_from_json
 
-if __name__ == "__main__":
-    # Создаем товары
-    product1 = Product(
-        name="Смартфон Apple iPhone 15",
-        description="Современный смартфон с большим экраном",
-        price=99999.99,
-        quantity=10,
-    )
 
-    product2 = Product(
-        name="Ноутбук MacBook Air", description="Легкий и производительный ноутбук", price=129999.99, quantity=5
-    )
+# Загрузка данных из JSON
+categories = load_data_from_json('data/products.json')
 
-    # Создаем категорию
-    electronics = Category(name="Электроника", description="Категория электронных устройств")
+# Вывод информации о категориях и товарах
+for category in categories:
+    print(f'\n{category}')
+    for product in category.products:
+        print(f'\n{product}')
 
-    # Добавляем товары в категорию
-    electronics.add_product(product1)
-    electronics.add_product(product2)
-
-    # Выводим информацию
-    print(electronics)
-    print("\nИнформация о товаре:")
-    print(product1)
-    print("\nИнформация о товаре:")
-    print(product2)
-
-    # Доступ к общей информации
-    print(f"\nВсего категорий: {Category.total_categories}")  # Выведет: 1
-    print(f"Всего товаров: {Category.total_products}")  # Выведет: 2
+# Доступ к общей информации
+print(f"\nВсего категорий: {Category.total_categories}")  # Выведет: 1
+print(f"Всего товаров: {Category.total_products}")  # Выведет: 2

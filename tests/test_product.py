@@ -1,13 +1,10 @@
 from src.categories_products import Product
 
 
-def test_init():
-    """ Тест проверки корректности инициализации объекта """
+def test_init() -> None:
+    """Тест проверки корректности инициализации объекта"""
     product = Product(
-        name="Смартфон",
-        description="Современный смартфон с большим экраном",
-        price=29999.99,
-        quantity=10
+        name="Смартфон", description="Современный смартфон с большим экраном", price=29999.99, quantity=10
     )
 
     # Проверяем, что все атрибуты установлены правильно
@@ -17,13 +14,10 @@ def test_init():
     assert product.quantity == 10, "Ошибка в количестве"
 
 
-def test_init_types():
-    """ Тест проверки типов данных при инициализации """
+def test_init_types() -> None:
+    """Тест проверки типов данных при инициализации"""
     product = Product(
-        name="Смартфон",
-        description="Современный смартфон с большим экраном",
-        price=29999.99,
-        quantity=10
+        name="Смартфон", description="Современный смартфон с большим экраном", price=29999.99, quantity=10
     )
 
     # Проверяем типы данных атрибутов
@@ -33,13 +27,10 @@ def test_init_types():
     assert isinstance(product.quantity, int), "Количество должно быть целым числом"
 
 
-def test_quantity():
-    """ Тест проверки количества товара """
+def test_quantity() -> None:
+    """Тест проверки количества товара"""
     # Проверяем начальное количество
     product = Product(
-        name="Смартфон",
-        description="Современный смартфон с большим экраном",
-        price=29999.99,
-        quantity=10
+        name="Смартфон", description="Современный смартфон с большим экраном", price=29999.99, quantity=10
     )
     assert product.quantity == 10, "Ошибка в начальном количестве"

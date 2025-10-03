@@ -1,9 +1,10 @@
 import json
-from typing import List, Optional
+from typing import List
+
 from src.categories_products import Category, Product
 
-
 # Классы Product и Category остаются без изменений
+
 
 def load_data_from_json(file_path: str) -> List[Category]:
     """
@@ -14,7 +15,7 @@ def load_data_from_json(file_path: str) -> List[Category]:
     """
     try:
         # Открываем и читаем JSON файл
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
 
         categories = []
@@ -23,21 +24,19 @@ def load_data_from_json(file_path: str) -> List[Category]:
         for category_data in data:
             # Создаем список товаров для текущей категории
             products = []
-            for product_data in category_data['products']:
+            for product_data in category_data["products"]:
                 # Создаем объект Product
                 product = Product(
-                    name=product_data['name'],
-                    description=product_data['description'],
-                    price=product_data['price'],
-                    quantity=product_data['quantity']
+                    name=product_data["name"],
+                    description=product_data["description"],
+                    price=product_data["price"],
+                    quantity=product_data["quantity"],
                 )
                 products.append(product)
 
             # Создаем объект Category с загруженными товарами
             category = Category(
-                name=category_data['name'],
-                description=category_data['description'],
-                products=products
+                name=category_data["name"], description=category_data["description"], products=products
             )
             categories.append(category)
 

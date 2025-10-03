@@ -1,8 +1,7 @@
-from typing import Optional, List
 from src.categories_products import Category, Product
 
 
-def test_category_init():
+def test_category_init() -> None:
     # Тест 1: Создание категории без товаров
     category1 = Category("Электроника", "Электронные устройства")
     assert category1.name == "Электроника"
@@ -12,12 +11,7 @@ def test_category_init():
     assert Category.total_products == 0
 
     # Тест 2: Создание категории с товарами
-    product1 = Product(
-        name="Телефон",
-        description="Смартфон последней модели",
-        price=29999,
-        quantity=10
-    )
+    product1 = Product(name="Телефон", description="Смартфон последней модели", price=29999, quantity=10)
 
     category2 = Category("Электроника", "Электронные устройства")
     category2.add_product(product1)
@@ -35,9 +29,10 @@ def test_category_init():
     category3 = Category("Бытовая техника", "Техника для дома")
     assert Category.total_categories == 1
     assert Category.total_products == 0
+    assert category3.name == "Бытовая техника"  # Добавляем дополнительное утверждение
 
 
-def test_category_count():
+def test_category_count() -> None:
     # Очищаем счетчик перед тестом
     Category.total_categories = 0
 

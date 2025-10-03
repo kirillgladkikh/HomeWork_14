@@ -101,3 +101,94 @@ def test_invalid_data_format():
     with patch("builtins.open", mock_open(read_data=invalid_data)):
         categories = load_data_from_json("invalid.json")
         assert categories == [], "При некорректном формате должен возвращаться пустой список"
+
+
+def test_negative_values():
+    negative_data = {
+        "categories": [
+            {
+                "name": "Тестовый",
+                "description": "Проверка отрицательных значений",
+                "products": [
+                    {
+                        "name": "Товар",
+                        "description": "Тест",
+                        "price": -100,  # Отрицательная цена
+                        "quantity": -5  # Отрицательное количество
+                    }
+                ]
+            }
+        ]
+    }
+
+    with patch("builtins.open", mock_open(read_data=json.dumps(negative_data))):
+        categories = load_data_from_json("negative_values.json")
+
+        # Проверяем, что категория загрузилась
+        assert len(categories) == 1, "Должна быть загружена одна категория"
+
+        # Проверяем значения в категории через ключи словаря
+        category = categories[0]
+        assert category["name"] == "Тестовый", "Неверное имя категории"
+        assert category["description"] == "Проверка отрицательных значений", "Неверное описание категории"
+
+        # Проверяем товар с отрицательными значениями
+        product = category["products"][0]
+        assert product["name"] == "Товар", "Неверное имя товара"
+        assert product["description"] == "Тест", "Неверное описание товара"
+        assert product["price"] == -100, "Неверная цена товара"
+        assert product["quantity"] == -5, "Неверное количество товара"
+
+        # Проверяем структуру данных
+        assert isinstance(category, dict), "Категория должна быть словарем"
+        assert isinstance(category["products"], list), "Товары должны быть списком"
+        assert len(category["products"]) == 1, "Должен быть загружен один товар"
+
+
+def test_unicode_characters():
+    unicode_data = {
+        "categories": [
+            {
+                "name": "Специальные символы",
+                "description": "Тестирование Unicode: é ü ö",
+                "products": [
+                    {
+                        "name": "Кофе эспрессо",
+                        "description": "Кофе с é и ü",
+                        "price": 200,
+                        "quantity": 50
+                    }
+                ]
+            }
+        ]
+    }
+
+    with patch("builtins.open", mock_open(read_data=json.dumps(unicode_data))):
+        categories = load_data_from_json("unicode.json")
+
+        # Проверяем первую категорию через ключи словаря
+        category = categories[0]
+
+        # Проверяем описание категории на наличие Unicode символов
+        assert "é" in category["description"], "Unicode символы должны корректно обрабатываться в описании категории"
+        assert "ü" in category["description"]
+        assert "ö" in category["description"]
+
+        # Проверяем название категории
+        assert category["name"] == "Специальные символы", "Неверное название категории"
+
+        # Проверяем товар
+        product = category["products"][0]
+        assert "é" in product["description"], "Unicode символы должны корректно обрабатываться в описании товара"
+        assert "ü" in product["description"]
+
+        # Дополнительные проверки
+        assert isinstance(category, dict), "Категория должна быть словарем"
+        assert isinstance(category["products"], list), "Товары должны быть списком"
+        assert len(category["products"]) == 1, "Должен быть загружен один товар"
+
+        # Проверяем корректность загрузки всех Unicode символов
+        assert category["name"] == "Специальные символы"
+        assert category["description"] == "Тестирование Unicode: é ü ö"
+        assert product["name"] == "Кофе эспрессо"
+        assert product["description"] == "Кофе с é и ü"

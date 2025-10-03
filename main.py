@@ -26,3 +26,7 @@ if __name__ == "__main__":
     print(product1)
     print("\nИнформация о товаре:")
     print(product2)
+
+    # Доступ к общей информации
+    print(f"\nВсего категорий: {Category.total_categories}")  # Выведет: 1
+    print(f"Всего товаров: {Category.total_products}")  # Выведет: 2

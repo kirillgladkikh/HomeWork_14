@@ -1,5 +1,6 @@
 from typing import Optional
 
+
 class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
         """
@@ -25,6 +26,10 @@ class Product:
 
 
 class Category:
+    # Атрибуты класса для хранения общей информации
+    total_categories = 0  # Общее количество категорий
+    total_products = 0  # Общее количество товаров во всех категориях
+
     def __init__(self, name: str, description: str, products: Optional[list[Product]] = None):
         """
         Класс для представления категории товаров.
@@ -37,10 +42,17 @@ class Category:
         self.description = description
         self.products = products if products is not None else []
 
+        # Увеличиваем счетчик категорий при создании новой категории
+        Category.total_categories += 1
+        # Учитываем количество товаров в новой категории
+        Category.total_products += len(self.products)
+
     def add_product(self, product: Product) -> None:
         """Добавить товар в категорию."""
         if isinstance(product, Product):
             self.products.append(product)
+            # При добавлении нового товара увеличиваем общий счетчик
+            Category.total_products += 1
         else:
             raise TypeError("Можно добавлять только объекты класса Product")
 

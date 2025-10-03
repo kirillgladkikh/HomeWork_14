@@ -1,9 +1,6 @@
 import json
 from typing import List
-
 from src.categories_products import Category, Product
-
-# Классы Product и Category остаются без изменений
 
 
 def load_data_from_json(file_path: str) -> List[Category]:

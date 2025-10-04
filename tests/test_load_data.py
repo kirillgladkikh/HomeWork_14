@@ -1,191 +1,100 @@
-from unittest.mock import mock_open, patch
+from unittest.mock import patch, mock_open
 import json
+from src.categories_products import Category, Product
 from src.load_data import load_data_from_json
 
 # Подготавливаем тестовые данные
-test_data = {
-    "categories": [
-        {
-            "name": "Электроника",
-            "description": "Электронные устройства",
-            "products": [
-                {"name": "Телефон", "description": "Смартфон", "price": 25000, "quantity": 10},
-                {"name": "Ноутбук", "description": "Компьютер", "price": 50000, "quantity": 5},
-            ],
-        },
-        {
-            "name": "Бытовая техника",
-            "description": "Домашние приборы",
-            "products": [{"name": "Холодильник", "description": "Морозильник", "price": 45000, "quantity": 8}],
-        },
-    ]
-}
-
-
-def load_data_from_json(file_path):
-    try:
-        with open(file_path, "r") as file:
-            data = json.load(file)
-            # Проверяем структуру данных
-            if "categories" in data and isinstance(data["categories"], list):
-                return data["categories"]
-            else:
-                print("Ошибка в структуре данных")
-                return []
-    except FileNotFoundError:
-        print(f"Ошибка: файл {file_path} не найден")
-        raise
-    except json.JSONDecodeError:
-        print("Произошла ошибка при загрузке данных")
-        return []
+test_data = [
+    {
+        "name": "Смартфоны",
+        "description": "Смартфоны, как средство не только коммуникации, но и получение дополнительных функций для удобства жизни",
+        "products": [
+            {"name": "Samsung Galaxy C23 Ultra", "description": "256GB, Серый цвет, 200MP камера", "price": 180000.0,
+             "quantity": 5},
+            {"name": "Iphone 15", "description": "512GB, Gray space", "price": 210000.0, "quantity": 8},
+            {"name": "Xiaomi Redmi Note 11", "description": "1024GB, Синий", "price": 31000.0, "quantity": 14}
+        ]
+    },
+    {
+        "name": "Телевизоры",
+        "description": "Современный телевизор, который позволяет наслаждаться просмотром, станет вашим другом и помощником",
+        "products": [
+            {"name": "55\" QLED 4K", "description": "Фоновая подсветка", "price": 123000.0, "quantity": 7}
+        ]
+    }
+]
 
 
 def test_successful_load():
+    # Создаем моковый файл с JSON данными
     with patch("builtins.open", mock_open(read_data=json.dumps(test_data))):
         categories = load_data_from_json("test.json")
 
-        assert categories is not None, "Результат не должен быть None"
-        assert len(categories) == 2, "Неверное количество категорий"
+        # Проверяем количество категорий
+        assert len(categories) == 2
+
+        # Проверяем первую категорию
+        smartphones = categories[0]
+        assert isinstance(smartphones, Category)
+        assert smartphones.name == "Смартфоны"
+        assert smartphones.description == "Смартфоны, как средство не только коммуникации, но и получение дополнительных функций для удобства жизни"
+
+        # Проверяем количество товаров в первой категории
+        assert len(smartphones.products) == 3
+
+        # Проверяем первый товар в первой категории
+        samsung = smartphones.products[0]
+        assert isinstance(samsung, Product)
+        assert samsung.name == "Samsung Galaxy C23 Ultra"
+        assert samsung.description == "256GB, Серый цвет, 200MP камера"
+        assert samsung.price == 180000.0
+        assert samsung.quantity == 5
+
+        # Проверяем второй товар в первой категории
+        iphone = smartphones.products[1]
+        assert isinstance(iphone, Product)
+        assert iphone.name == "Iphone 15"
+        assert iphone.price == 210000.0
+        assert iphone.quantity == 8
+
+        # Проверяем третий товар в первой категории
+        xiaomi = smartphones.products[2]
+        assert isinstance(xiaomi, Product)
+        assert xiaomi.name == "Xiaomi Redmi Note 11"
+        assert xiaomi.price == 31000.0
+        assert xiaomi.quantity == 14
+
+        # Проверяем вторую категорию
+        tv = categories[1]
+        assert isinstance(tv, Category)
+        assert tv.name == "Телевизоры"
+        assert tv.description == "Современный телевизор, который позволяет наслаждаться просмотром, станет вашим другом и помощником"
+
+        # Проверяем товар во второй категории
+        assert len(tv.products) == 1
+        tv_product = tv.products[0]
+        assert isinstance(tv_product, Product)
+        assert tv_product.name == "55\" QLED 4K"
+        assert tv_product.price == 123000.0
+        assert tv_product.quantity == 7
 
 
 def test_file_not_found():
-    try:
-        load_data_from_json("non_existent_file.json")
-    except FileNotFoundError:
-        pass
-    else:
-        assert False, "Не сгенерировано исключение FileNotFoundError"
+    with patch("builtins.open", side_effect=FileNotFoundError):
+        result = load_data_from_json("non_existent_file.json")
+        assert result == []
 
 
-# Тест на пустой файл
-def test_empty_file():
-    with patch("builtins.open", mock_open(read_data="{}")):
+def test_invalid_json():
+    with patch("builtins.open", mock_open(read_data="{invalid_json}")):
+        result = load_data_from_json("invalid.json")
+        assert result == []
+
+
+def test_empty_file(capfd):
+    # Создаем пустой файл
+    with patch("builtins.open", mock_open(read_data="[]")):
         categories = load_data_from_json("empty.json")
-        assert categories == [], "При пустом файле должен возвращаться пустой список"
+        assert categories == []
 
 
-# Тест на отсутствие ключа categories
-def test_missing_categories_key():
-    invalid_data = {"wrong_key": [{"name": "Test"}]}
-    with patch("builtins.open", mock_open(read_data=json.dumps(invalid_data))):
-        categories = load_data_from_json("invalid.json")
-        assert categories == [], "При отсутствии ключа categories должен возвращаться пустой список"
-
-
-# Тест на некорректный формат данных
-def test_invalid_data_format():
-    invalid_data = "Это не JSON"
-    with patch("builtins.open", mock_open(read_data=invalid_data)):
-        categories = load_data_from_json("invalid.json")
-        assert categories == [], "При некорректном формате должен возвращаться пустой список"
-
-
-def test_negative_values():
-    negative_data = {
-        "categories": [
-            {
-                "name": "Тестовый",
-                "description": "Проверка отрицательных значений",
-                "products": [
-                    {
-                        "name": "Товар",
-                        "description": "Тест",
-                        "price": -100,  # Отрицательная цена
-                        "quantity": -5,  # Отрицательное количество
-                    }
-                ],
-            }
-        ]
-    }
-
-    with patch("builtins.open", mock_open(read_data=json.dumps(negative_data))):
-        categories = load_data_from_json("negative_values.json")
-
-        # Проверяем, что категория загрузилась
-        assert len(categories) == 1, "Должна быть загружена одна категория"
-
-        # Проверяем значения в категории через ключи словаря
-        category = categories[0]
-        assert category["name"] == "Тестовый", "Неверное имя категории"
-        assert category["description"] == "Проверка отрицательных значений", "Неверное описание категории"
-
-        # Проверяем товар с отрицательными значениями
-        product = category["products"][0]
-        assert product["name"] == "Товар", "Неверное имя товара"
-        assert product["description"] == "Тест", "Неверное описание товара"
-        assert product["price"] == -100, "Неверная цена товара"
-        assert product["quantity"] == -5, "Неверное количество товара"
-
-        # Проверяем структуру данных
-        assert isinstance(category, dict), "Категория должна быть словарем"
-        assert isinstance(category["products"], list), "Товары должны быть списком"
-        assert len(category["products"]) == 1, "Должен быть загружен один товар"
-
-
-def test_unicode_characters():
-    unicode_data = {
-        "categories": [
-            {
-                "name": "Специальные символы",
-                "description": "Тестирование Unicode: é ü ö",
-                "products": [{"name": "Кофе эспрессо", "description": "Кофе с é и ü", "price": 200, "quantity": 50}],
-            }
-        ]
-    }
-
-    with patch("builtins.open", mock_open(read_data=json.dumps(unicode_data))):
-        categories = load_data_from_json("unicode.json")
-
-        # Проверяем первую категорию через ключи словаря
-        category = categories[0]
-
-        # Проверяем описание категории на наличие Unicode символов
-        assert "é" in category["description"], "Unicode символы должны корректно обрабатываться в описании категории"
-        assert "ü" in category["description"]
-        assert "ö" in category["description"]
-
-        # Проверяем название категории
-        assert category["name"] == "Специальные символы", "Неверное название категории"
-
-        # Проверяем товар
-        product = category["products"][0]
-        assert "é" in product["description"], "Unicode символы должны корректно обрабатываться в описании товара"
-        assert "ü" in product["description"]
-
-        # Дополнительные проверки
-        assert isinstance(category, dict), "Категория должна быть словарем"
-        assert isinstance(category["products"], list), "Товары должны быть списком"
-        assert len(category["products"]) == 1, "Должен быть загружен один товар"
-
-        # Проверяем корректность загрузки всех Unicode символов
-        assert category["name"] == "Специальные символы"
-        assert category["description"] == "Тестирование Unicode: é ü ö"
-        assert product["name"] == "Кофе эспрессо"
-        assert product["description"] == "Кофе с é и ü"
-
-
-def test_large_numbers():
-    large_data = {
-        "categories": [
-            {
-                "name": "Премиум",
-                "description": "Дорогие товары",
-                "products": [{"name": "Яхта", "description": "Водный транспорт", "price": 10000000, "quantity": 1}],
-            }
-        ]
-    }
-
-    with patch("builtins.open", mock_open(read_data=json.dumps(large_data))):
-        categories = load_data_from_json("large_numbers.json")
-
-        # Исправленный способ доступа к элементам словаря
-        assert categories[0]["products"][0]["price"] == 10000000, "Неверное значение цены"
-
-        # Дополнительные проверки
-        assert categories[0]["name"] == "Премиум", "Неверное название категории"
-        assert categories[0]["description"] == "Дорогие товары", "Неверное описание категории"
-
-        product = categories[0]["products"][0]
-        assert product["name"] == "Яхта", "Неверное название товара"
-        assert product["description"] == "Водный транспорт", "Неверное описание товара"
-        assert product["quantity"] == 1, "Неверное количество товара"

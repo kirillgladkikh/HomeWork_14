@@ -1,5 +1,6 @@
 import json
 from typing import List
+
 from src.categories_products import Category, Product
 
 

@@ -1,5 +1,6 @@
 from typing import Optional, Dict
 
+
 class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
@@ -19,12 +20,12 @@ class Product:
             self.__price = value
 
     @classmethod
-    def new_product(cls, product_data: Dict) -> 'Product':
+    def new_product(cls, product_data: Dict) -> "Product":
         return cls(
-            name=product_data['name'],
-            description=product_data['description'],
-            price=product_data['price'],
-            quantity=product_data['quantity']
+            name=product_data["name"],
+            description=product_data["description"],
+            price=product_data["price"],
+            quantity=product_data["quantity"],
         )
 
     def __str__(self) -> str:
@@ -58,13 +59,8 @@ class Category:
     @property
     def products(self) -> str:
         return "\n".join(
-            [f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-             for product in self.__products]
+            [f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n" for product in self.__products]
         )
 
     def __str__(self) -> str:
-        return (
-            f"Категория: {self.name}\n"
-            f"Описание: {self.description}\n"
-            f"Товары в категории:\n{self.products}"
-        )
+        return f"Категория: {self.name}\n" f"Описание: {self.description}\n" f"Товары в категории:\n{self.products}"

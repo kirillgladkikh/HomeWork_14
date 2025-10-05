@@ -10,7 +10,7 @@ if __name__ == "__main__":
     category1 = Category(
         "Смартфоны",
         "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни",
-        [product1, product2, product3]
+        [product1, product2, product3],
     )
 
     # Проверяем геттер products
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     print(category1.products)
 
     # Добавляем новый продукт
-    product4 = Product("55\" QLED 4K", "Фоновая подсветка", 123000.0, 7)
+    product4 = Product('55" QLED 4K', "Фоновая подсветка", 123000.0, 7)
     category1.add_product(product4)
     print("\nОбновленный список товаров:")
     print(category1.products)
@@ -28,6 +28,6 @@ if __name__ == "__main__":
         "name": "Samsung Galaxy S23 Ultra",
         "description": "256GB, Серый цвет, 200MP камера",
         "price": 180000.0,
-        "quantity": 5
+        "quantity": 5,
     }
     new_product = Product.new_product(new_product_data)

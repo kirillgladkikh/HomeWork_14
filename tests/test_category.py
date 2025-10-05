@@ -33,96 +33,68 @@ def test_category_count() -> None:
 
 
 # Тестирование класса Category
-def reset_counters():
+def reset_counters() -> None:
     Category.total_categories = 0
     Category.total_products = 0
 
 
-def test_category_setup():
+def test_category_setup() -> None:
     # Сбрасываем счётчики перед тестом
     reset_counters()
 
     # Создаём продукты
-    product1 = Product(
-        name="Product 1",
-        description="Desc 1",
-        price=100.0,
-        quantity=10
-    )
-
-    product2 = Product(
-        name="Product 2",
-        description="Desc 2",
-        price=200.0,
-        quantity=20
-    )
+    product1 = Product(name="Product 1", description="Desc 1", price=100.0, quantity=10)
 
     # Создаём категорию
-    category = Category(
-        name="Test Category",
-        description="Test description",
-        products=[product1]
-    )
+    category = Category(name="Test Category", description="Test description", products=[product1])
 
     # Проверяем корректность создания
     assert category.name == "Test Category"
     assert category.description == "Test description"
-    assert len(category.products) == 1
+
+    # Проверяем количество товаров через splitlines
+    products_list = category.products.splitlines()
+    assert len(products_list) == 1  # Теперь проверяем список строк
+
     assert Category.total_categories == 1
     assert Category.total_products == 1
 
 
-def test_add_product():
+def test_add_product() -> None:
     # Сбрасываем счётчики
     reset_counters()
 
     # Создаём продукты и категорию
-    product1 = Product(
-        name="Product 1",
-        description="Desc 1",
-        price=100.0,
-        quantity=10
-    )
+    product1 = Product(name="Product 1", description="Desc 1", price=100.0, quantity=10)
 
-    product2 = Product(
-        name="Product 2",
-        description="Desc 2",
-        price=200.0,
-        quantity=20
-    )
+    product2 = Product(name="Product 2", description="Desc 2", price=200.0, quantity=20)
 
-    category = Category(
-        name="Test Category",
-        description="Test description",
-        products=[product1]
-    )
+    category = Category(name="Test Category", description="Test description", products=[product1])
 
     # Добавляем продукт
     category.add_product(product2)
-    assert len(category.products) == 2
+
+    # Проверяем количество товаров через splitlines
+    products_list = [line for line in category.products.splitlines() if line.strip()]
+    assert len(products_list) == 2  # Теперь проверяем список строк
+
     assert Category.total_products == 2
 
 
-def test_total_categories():
+def test_total_categories() -> None:
     # Сбрасываем счётчики
     reset_counters()
 
     # Создаём первую категорию
-    Category(
-        name="Category 1",
-        description="Desc 1"
-    )
+    Category(name="Category 1", description="Desc 1")
 
     # Создаём вторую категорию
-    Category(
-        name="Category 2",
-        description="Desc 2"
-    )
+    Category(name="Category 2", description="Desc 2")
 
     assert Category.total_categories == 2
 
 
-def test_total_products():
+def test_total_products() -> None:
     # Сбрасываем счётчики
     reset_counters()
 
@@ -130,26 +102,12 @@ def test_total_products():
     category = Category(
         name="Test Category",
         description="Test description",
-        products=[
-            Product(
-                name="Product 1",
-                description="Desc 1",
-                price=100.0,
-                quantity=10
-            )
-        ]
+        products=[Product(name="Product 1", description="Desc 1", price=100.0, quantity=10)],
     )
 
     assert Category.total_products == 1
 
     # Добавляем второй продукт
-    category.add_product(
-        Product(
-            name="Product 2",
-            description="Desc 2",
-            price=200.0,
-            quantity=20
-        )
-    )
+    category.add_product(Product(name="Product 2", description="Desc 2", price=200.0, quantity=20))
 
     assert Category.total_products == 2

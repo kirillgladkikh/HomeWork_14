@@ -37,73 +37,48 @@ def test_quantity() -> None:
 
 
 # Тестирование класса Product
-def test_product_setup():
+def test_product_setup() -> None:
     # Создаем продукт внутри теста
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
     # Проверяем корректность создания
     assert product.name == "Test Product"
     assert product.description == "Test description"
     assert product.price == 100.0
     assert product.quantity == 10
 
-def test_price_getter():
+
+def test_price_getter() -> None:
     # Создаем продукт непосредственно в тесте
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
     assert product.price == 100.0
 
-def test_price_setter_valid():
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+
+def test_price_setter_valid() -> None:
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
     product.price = 200.0
     assert product.price == 200.0
 
-def test_price_setter_invalid():
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+
+def test_price_setter_invalid() -> None:
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
     try:
         product.price = -10
     except Exception as e:
         assert str(e) == "Цена не должна быть нулевая или отрицательная"
     assert product.price == 100.0
 
-def test_price_setter_zero():
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+
+def test_price_setter_zero() -> None:
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
     try:
         product.price = 0
     except Exception as e:
         assert str(e) == "Цена не должна быть нулевая или отрицательная"
     assert product.price == 100.0
 
-def test_new_product_from_dict():
-    product_data = {
-        "name": "New Product",
-        "description": "New description",
-        "price": 50.0,
-        "quantity": 5
-    }
+
+def test_new_product_from_dict() -> None:
+    product_data = {"name": "New Product", "description": "New description", "price": 50.0, "quantity": 5}
     new_product = Product.new_product(product_data)
     assert new_product.name == "New Product"
     assert new_product.price == 50.0

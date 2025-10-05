@@ -67,7 +67,7 @@ def test_category_setup():
     # Проверяем корректность создания
     assert category.name == "Test Category"
     assert category.description == "Test description"
-    assert len(category._products) == 1
+    assert len(category.products) == 1
     assert Category.total_categories == 1
     assert Category.total_products == 1
 
@@ -99,7 +99,7 @@ def test_add_product():
 
     # Добавляем продукт
     category.add_product(product2)
-    assert len(category._products) == 2
+    assert len(category.products) == 2
     assert Category.total_products == 2
 
 

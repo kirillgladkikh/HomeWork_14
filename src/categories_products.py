@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 
 class Product:
@@ -37,7 +37,7 @@ class Product:
         )
 
     # Для класса Product добавить строковое отображение в следующем виде: Название продукта, 80 руб. Остаток: 15 шт.
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     # Для класса Product переопределен магический метод сложения __add__, который принимает два аргумента:
@@ -49,7 +49,7 @@ class Product:
     # Например, для товара А с ценой 100 рублей и количеством на складе 10 и товара B с ценой 200 рублей
     # и количеством на складе 2
     # результатом выполнения операции А + B должно стать значение, полученное из 100 × 10 + 200 × 2 = 1400.
-    def __add__(self, other):
+    def __add__(self, other) -> float:
         if isinstance(other, Product):
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Сложение возможно только между объектами класса Product")
@@ -85,7 +85,7 @@ class Category:
 
     # Добавляет метод __str__ в класс Category, который возвращает строку в указанном формате:
     # Название категории, количество продуктов: 200 шт.
-    def __str__(self):
+    def __str__(self) -> str:
         # Подсчитываем общее количество товаров во всех продуктах категории
         total_quantity = sum(product.quantity for product in self.__products)
         # Формируем строку в требуемом формате

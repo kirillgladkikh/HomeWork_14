@@ -111,3 +111,48 @@ def test_total_products() -> None:
     category.add_product(Product(name="Product 2", description="Desc 2", price=200.0, quantity=20))
 
     assert Category.total_products == 2
+
+
+# Тесты для ДЗ 15.1 "Магические методы"
+
+# Создаем тестовые объекты
+product1 = Product("Смартфон", "Описание", 80, 15)
+product2 = Product("Ноутбук", "Описание", 100, 10)
+product3 = Product("Планшет", "Описание", 50, 5)
+
+# Создаем категории для тестирования
+category1 = Category("Электроника", "Описание категории", [product1, product2])
+
+category2 = Category("Компьютеры", "Описание категории", [product2, product3])
+
+
+# Тестирование геттера products
+def test_products_getter() -> None:
+    # Проверяем вывод списка продуктов
+    expected_output = "Смартфон, 80 руб. Остаток: 15 шт.\n" "Ноутбук, 100 руб. Остаток: 10 шт."
+    assert category1.products == expected_output
+
+    # Проверяем другой вариант
+    expected_output2 = "Ноутбук, 100 руб. Остаток: 10 шт.\n" "Планшет, 50 руб. Остаток: 5 шт."
+    assert category2.products == expected_output2
+
+    # Проверяем пустую категорию
+    empty_category = Category("Пустая", "Описание")
+    assert empty_category.products == ""
+
+
+# Тестирование метода __str__
+def test_str_method() -> None:
+    # Проверяем первую категорию
+    assert str(category1) == "Категория: Электроника, количество продуктов: 25 шт."
+
+    # Проверяем вторую категорию
+    assert str(category2) == "Категория: Компьютеры, количество продуктов: 15 шт."
+
+    # Проверяем категорию с одним продуктом
+    single_product_category = Category("Аксессуары", "Описание", [product3])
+    assert str(single_product_category) == "Категория: Аксессуары, количество продуктов: 5 шт."
+
+    # Проверяем пустую категорию
+    empty_category = Category("Пустая", "Описание")
+    assert str(empty_category) == "Категория: Пустая, количество продуктов: 0 шт."

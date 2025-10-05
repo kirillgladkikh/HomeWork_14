@@ -83,3 +83,52 @@ def test_new_product_from_dict() -> None:
     assert new_product.name == "New Product"
     assert new_product.price == 50.0
     assert new_product.quantity == 5
+
+
+# Тесты для ДЗ 15.1 "Магические методы"
+# Создаем тестовые объекты
+product1 = Product("Смартфон", "Описание", 80, 15)
+product2 = Product("Ноутбук", "Описание", 100, 10)
+
+
+# Тестирование метода __str__
+def test_str_method() -> None:
+    # Проверяем первый продукт
+    assert str(product1) == "Смартфон, 80 руб. Остаток: 15 шт."
+
+    # Проверяем второй продукт
+    assert str(product2) == "Ноутбук, 100 руб. Остаток: 10 шт."
+
+    # Проверяем третий вариант
+    product3 = Product("Планшет", "Описание", 50, 5)
+    assert str(product3) == "Планшет, 50 руб. Остаток: 5 шт."
+
+
+# Тестирование метода __add__
+def test_add_method() -> None:
+    # Проверяем сложение двух продуктов
+    assert product1 + product2 == 80 * 15 + 100 * 10  # 1200 + 1000 = 2200
+
+    # Проверяем сложение с самим собой
+    assert product1 + product1 == 80 * 15 + 80 * 15  # 1200 + 1200 = 2400
+
+    # Проверяем другой вариант
+    assert product2 + product2 == 100 * 10 + 100 * 10  # 1000 + 1000 = 2000
+
+
+# Тестирование обработки ошибок
+def test_add_invalid_type() -> None:
+    try:
+        product1 + "строка"
+    except TypeError as e:
+        assert str(e) == "Сложение возможно только между объектами класса Product"
+
+    try:
+        product1 + 123
+    except TypeError as e:
+        assert str(e) == "Сложение возможно только между объектами класса Product"
+
+    try:
+        product1 + [1, 2, 3]
+    except TypeError as e:
+        assert str(e) == "Сложение возможно только между объектами класса Product"

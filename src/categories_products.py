@@ -28,13 +28,13 @@ class Product:
             quantity=product_data["quantity"],
         )
 
-    def __str__(self) -> str:
-        return (
-            f"Товар: {self.name}\n"
-            f"Описание: {self.description}\n"
-            f"Цена: {self.price} руб.\n"
-            f"В наличии: {self.quantity} шт."
-        )
+    # def __str__(self) -> str:
+    #     return (
+    #         f"Товар: {self.name}\n"
+    #         f"Описание: {self.description}\n"
+    #         f"Цена: {self.price} руб.\n"
+    #         f"В наличии: {self.quantity} шт."
+    #     )
 
     # Для класса Product добавить строковое отображение в следующем виде: Название продукта, 80 руб. Остаток: 15 шт.
     def __str__(self) -> str:
@@ -50,7 +50,7 @@ class Product:
     # и количеством на складе 2
     # результатом выполнения операции А + B должно стать значение, полученное из 100 × 10 + 200 × 2 = 1400.
     def __add__(self, other) -> float:
-        if isinstance(other, Product) and type(self) == type(other):  # ДОБАВЛЕНО ОГРАНИЧЕНИЕ
+        if isinstance(other, Product) and type(self) is type(other):  # ДОБАВЛЕНО ОГРАНИЧЕНИЕ
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Сложение возможно только между объектами класса Product")
 
@@ -63,10 +63,20 @@ class Product:
 # Класс «Трава газонная» (LawnGrass) расширен атрибутами:
 # страна-производитель (country), срок прорастания (germination_period), цвет (color).
 
+
 # Новый класс Smartphone
 class Smartphone(Product):
-    def __init__(self, name: str, description: str, price: float, quantity: int,
-                 efficiency: float, model: str, memory: int, color: str):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ):
         super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
@@ -76,8 +86,16 @@ class Smartphone(Product):
 
 # Новый класс LawnGrass
 class LawnGrass(Product):
-    def __init__(self, name: str, description: str, price: float, quantity: int,
-                 country: str, germination_period: str, color: str):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ):
         super().__init__(name, description, price, quantity)
         self.country = country
         self.germination_period = germination_period

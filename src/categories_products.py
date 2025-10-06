@@ -50,9 +50,38 @@ class Product:
     # и количеством на складе 2
     # результатом выполнения операции А + B должно стать значение, полученное из 100 × 10 + 200 × 2 = 1400.
     def __add__(self, other) -> float:
-        if isinstance(other, Product):
+        if isinstance(other, Product) and type(self) == type(other):  # ДОБАВЛЕНО ОГРАНИЧЕНИЕ
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Сложение возможно только между объектами класса Product")
+
+
+# ДЗ 16.1
+
+# Созданы два класса наследников класса Product: «Смартфон» (Smartphone) и «Трава газонная» (LawnGrass).
+# Класс «Смартфон» (Smartphone) расширен атрибутами:
+# производительность (efficiency), модель (model), объем встроенной памяти (memory), цвет (color).
+# Класс «Трава газонная» (LawnGrass) расширен атрибутами:
+# страна-производитель (country), срок прорастания (germination_period), цвет (color).
+
+# Новый класс Smartphone
+class Smartphone(Product):
+    def __init__(self, name: str, description: str, price: float, quantity: int,
+                 efficiency: float, model: str, memory: int, color: str):
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+# Новый класс LawnGrass
+class LawnGrass(Product):
+    def __init__(self, name: str, description: str, price: float, quantity: int,
+                 country: str, germination_period: str, color: str):
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
 
 
 class Category:
@@ -68,7 +97,7 @@ class Category:
         Category.total_products += len(self.__products)
 
     def add_product(self, product: Product) -> None:
-        if isinstance(product, Product):
+        if isinstance(product, Product):  # ДОБАВЛЕНО ПРОВЕРКА ТИПА
             self.__products.append(product)
             Category.total_products += 1
         else:

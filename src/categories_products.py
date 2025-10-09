@@ -4,6 +4,20 @@ from typing import Dict, Optional
 
 # ДЗ 16.2
 
+# Добавляем определение миксина
+class LoggingMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        args_repr = [repr(a) for a in args]
+        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
+        signature = ", ".join(args_repr + kwargs_repr)
+        print(f"{self.__class__.__name__}({signature})")
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}({self.name!r}, {self.description!r}, "
+                f"{self.price!r}, {self.quantity!r})")
+
+
 # Базовый класс:
 # Создан базовый абстрактный класс с именем BaseProduct, который является родительским для классов продуктов.
 # Классы «Смартфон» и «Трава газонная» наследуются только от класса Product.
@@ -41,10 +55,15 @@ class BaseProduct(ABC):
         pass
 
 
-class Product(BaseProduct):
+# Изменяем порядок наследования в классе Product
+class Product(LoggingMixin, BaseProduct):  # Миксин идет первым!
     def __init__(self, name: str, description: str, price: float, quantity: int):
         super().__init__(name, description, price, quantity)
         self._price = price  # Переопределяем для приватности
+
+    # Добавляем реализацию метода __str__
+    def __str__(self) -> str:
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     @property
     def price(self) -> float:

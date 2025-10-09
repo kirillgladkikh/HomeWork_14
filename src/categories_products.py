@@ -59,19 +59,19 @@ class BaseProduct(ABC):
 class Product(LoggingMixin, BaseProduct):  # Миксин идет первым!
     def __init__(self, name: str, description: str, price: float, quantity: int):
         super().__init__(name, description, price, quantity)
-        self._price = price  # Переопределяем для приватности
+        # self._price = price  # Это тоже можно убрать, так как уже есть в BaseProduct
 
     # Добавляем реализацию метода __str__
     def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
-    @property
-    def price(self) -> float:
-        return self._price
+    # @property
+    # def price(self) -> float:
+    #     return self._price
 
-    @price.setter
-    def price(self, value: float):
-        super().price = value
+    # @price.setter
+    # def price(self, value: float):
+    #     super().price = value
 
     @classmethod
     def new_product(cls, product_data: Dict) -> "Product":

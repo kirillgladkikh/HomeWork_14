@@ -1,23 +1,58 @@
+from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
 
-class Product:
+# ДЗ 16.2
+
+# Базовый класс:
+# Создан базовый абстрактный класс с именем BaseProduct, который является родительским для классов продуктов.
+# Классы «Смартфон» и «Трава газонная» наследуются только от класса Product.
+# Выделена общая для каждого продукта функциональность и описана в абстрактном классе.
+
+class BaseProduct(ABC):
+    @abstractmethod
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
-        self.__price = price  # Делаем атрибут цены приватным
+        self._price = price  # Защищенный атрибут
         self.quantity = quantity
 
     @property
     def price(self) -> float:
-        return self.__price
+        return self._price
 
     @price.setter
     def price(self, value: float):
         if value <= 0:
-            print("Цена не должна быть нулевая или отрицательная")
-        else:
-            self.__price = value
+            raise ValueError("Цена не должна быть нулевой или отрицательной")
+        self._price = value
+
+    @classmethod
+    @abstractmethod
+    def new_product(cls, product_data: Dict) -> "BaseProduct":
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        pass
+
+    @abstractmethod
+    def __add__(self, other) -> float:
+        pass
+
+
+class Product(BaseProduct):
+    def __init__(self, name: str, description: str, price: float, quantity: int):
+        super().__init__(name, description, price, quantity)
+        self._price = price  # Переопределяем для приватности
+
+    @property
+    def price(self) -> float:
+        return self._price
+
+    @price.setter
+    def price(self, value: float):
+        super().price = value
 
     @classmethod
     def new_product(cls, product_data: Dict) -> "Product":
@@ -28,18 +63,6 @@ class Product:
             quantity=product_data["quantity"],
         )
 
-    # def __str__(self) -> str:
-    #     return (
-    #         f"Товар: {self.name}\n"
-    #         f"Описание: {self.description}\n"
-    #         f"Цена: {self.price} руб.\n"
-    #         f"В наличии: {self.quantity} шт."
-    #     )
-
-    # Для класса Product добавить строковое отображение в следующем виде: Название продукта, 80 руб. Остаток: 15 шт.
-    def __str__(self) -> str:
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
-
     # Для класса Product переопределен магический метод сложения __add__, который принимает два аргумента:
     # self и второй объект.
     # Метод возвращает сумму произведений цены на количество у двух объектов.
@@ -49,11 +72,11 @@ class Product:
     # Например, для товара А с ценой 100 рублей и количеством на складе 10 и товара B с ценой 200 рублей
     # и количеством на складе 2
     # результатом выполнения операции А + B должно стать значение, полученное из 100 × 10 + 200 × 2 = 1400.
+
     def __add__(self, other) -> float:
         if isinstance(other, Product) and type(self) is type(other):  # ДОБАВЛЕНО ОГРАНИЧЕНИЕ
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Сложение возможно только между объектами класса Product")
-
 
 # ДЗ 16.1
 
@@ -62,7 +85,6 @@ class Product:
 # производительность (efficiency), модель (model), объем встроенной памяти (memory), цвет (color).
 # Класс «Трава газонная» (LawnGrass) расширен атрибутами:
 # страна-производитель (country), срок прорастания (germination_period), цвет (color).
-
 
 # Новый класс Smartphone
 class Smartphone(Product):
@@ -123,15 +145,14 @@ class Category:
 
     # Tеперь каждый продукт имеет реализованное строковое отображение.
     # Геттер оптимизирован, преобразовав объект продукта в строку.
+
     @property
     def products(self) -> str:
         return "\n".join(str(product) for product in self.__products)
 
-    # def __str__(self) -> str:
-    #     return f"Категория: {self.name}\n" f"Описание: {self.description}\n" f"Товары в категории:\n{self.products}"
-
     # Добавляет метод __str__ в класс Category, который возвращает строку в указанном формате:
     # Название категории, количество продуктов: 200 шт.
+
     def __str__(self) -> str:
         # Подсчитываем общее количество товаров во всех продуктах категории
         total_quantity = sum(product.quantity for product in self.__products)

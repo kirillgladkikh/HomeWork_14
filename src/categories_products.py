@@ -1,27 +1,27 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Optional
-
+from typing import Any, Dict, Optional
 
 # ДЗ 16.2
 
+
 # Добавляем определение миксина
 class LoggingMixin:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         args_repr = [repr(a) for a in args]
         kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]
         signature = ", ".join(args_repr + kwargs_repr)
         print(f"{self.__class__.__name__}({signature})")
 
-    def __repr__(self):
-        return (f"{self.__class__.__name__}({self.name!r}, {self.description!r}, "
-                f"{self.price!r}, {self.quantity!r})")
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.name!r}, {self.description!r}, " f"{self.price!r}, {self.quantity!r})"
 
 
 # Базовый класс:
 # Создан базовый абстрактный класс с именем BaseProduct, который является родительским для классов продуктов.
 # Классы «Смартфон» и «Трава газонная» наследуются только от класса Product.
 # Выделена общая для каждого продукта функциональность и описана в абстрактном классе.
+
 
 class BaseProduct(ABC):
     @abstractmethod
@@ -36,7 +36,7 @@ class BaseProduct(ABC):
         return self._price
 
     @price.setter
-    def price(self, value: float):
+    def price(self, value: float) -> None:
         if value <= 0:
             raise ValueError("Цена не должна быть нулевой или отрицательной")
         self._price = value
@@ -51,7 +51,7 @@ class BaseProduct(ABC):
         pass
 
     @abstractmethod
-    def __add__(self, other) -> float:
+    def __add__(self, other: "Product") -> float:
         pass
 
 
@@ -92,10 +92,11 @@ class Product(LoggingMixin, BaseProduct):  # Миксин идет первым!
     # и количеством на складе 2
     # результатом выполнения операции А + B должно стать значение, полученное из 100 × 10 + 200 × 2 = 1400.
 
-    def __add__(self, other) -> float:
+    def __add__(self, other: "Product") -> float:
         if isinstance(other, Product) and type(self) is type(other):  # ДОБАВЛЕНО ОГРАНИЧЕНИЕ
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Сложение возможно только между объектами класса Product")
+
 
 # ДЗ 16.1
 
@@ -104,6 +105,7 @@ class Product(LoggingMixin, BaseProduct):  # Миксин идет первым!
 # производительность (efficiency), модель (model), объем встроенной памяти (memory), цвет (color).
 # Класс «Трава газонная» (LawnGrass) расширен атрибутами:
 # страна-производитель (country), срок прорастания (germination_period), цвет (color).
+
 
 # Новый класс Smartphone
 class Smartphone(Product):

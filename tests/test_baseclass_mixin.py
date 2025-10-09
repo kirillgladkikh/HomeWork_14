@@ -1,45 +1,25 @@
-from src.categories_products import Product, Smartphone, LawnGrass
+from src.categories_products import LawnGrass, Product, Smartphone
 
 
-def test_logging_mixin_init():
-    # Проверяем логирование при создании объекта Product
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=5
-    )
-
+def test_logging_mixin_init() -> None:
     # Проверяем, что в консоль выведена корректная информация о создании
     # Для этого можно использовать mock для sys.stdout
     from unittest.mock import patch
 
-    with patch('builtins.print') as mock_print:
-        Product(
-            name="Mock Product",
-            description="Mock description",
-            price=200.0,
-            quantity=10
-        )
-        mock_print.assert_called_with(
-            "Product('Mock Product', 'Mock description', 200.0, 10)"
-        )
+    with patch("builtins.print") as mock_print:
+        Product(name="Mock Product", description="Mock description", price=200.0, quantity=10)
+        mock_print.assert_called_with("Product('Mock Product', 'Mock description', 200.0, 10)")
 
-def test_logging_mixin_repr():
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=5
-    )
+
+def test_logging_mixin_repr() -> None:
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=5)
 
     # Проверяем корректность работы метода __repr__
-    expected_repr = (
-        "Product('Test Product', 'Test description', 100.0, 5)"
-    )
+    expected_repr = "Product('Test Product', 'Test description', 100.0, 5)"
     assert repr(product) == expected_repr
 
-def test_logging_mixin_with_smartphone():
+
+def test_logging_mixin_with_smartphone() -> None:
     # Проверяем работу миксина с наследником Smartphone
     smartphone = Smartphone(
         name="iPhone 15",
@@ -49,7 +29,7 @@ def test_logging_mixin_with_smartphone():
         efficiency=95.0,
         model="iPhone 15",
         memory=256,
-        color="Black"
+        color="Black",
     )
 
     # Проверяем, что базовые атрибуты доступны
@@ -64,7 +44,8 @@ def test_logging_mixin_with_smartphone():
     assert smartphone.memory == 256
     assert smartphone.color == "Black"
 
-def test_logging_mixin_with_lawn_grass():
+
+def test_logging_mixin_with_lawn_grass() -> None:
     # Проверяем работу миксина с наследником LawnGrass
     lawn_grass = LawnGrass(
         name="Газонная трава",
@@ -73,7 +54,7 @@ def test_logging_mixin_with_lawn_grass():
         quantity=100,
         country="Россия",
         germination_period="14 дней",
-        color="Зеленый"
+        color="Зеленый",
     )
 
     # Проверяем базовые атрибуты

@@ -54,16 +54,12 @@ def test_price_getter() -> None:
 
 
 def test_price_setter_valid() -> None:
-    product = Product(
-        name="Test Product",
-        description="Test description",
-        price=100.0,
-        quantity=10
-    )
+    product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
 
     # Проверяем валидное изменение цены
     product.price = 200.0
     assert product.price == 200.0
+
 
 # def test_price_setter_valid() -> None:
 #     product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)

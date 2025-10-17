@@ -58,8 +58,11 @@ class BaseProduct(ABC):
 # Изменяем порядок наследования в классе Product
 class Product(LoggingMixin, BaseProduct):  # Миксин идет первым!
     def __init__(self, name: str, description: str, price: float, quantity: int):
+        # ДЗ 17.1: Добавлена проверка на нулевое количество
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         super().__init__(name, description, price, quantity)
-        # self._price = price  # Это тоже можно убрать, так как уже есть в BaseProduct
 
     # Добавляем реализацию метода __str__
     def __str__(self) -> str:
@@ -179,3 +182,16 @@ class Category:
         total_quantity = sum(product.quantity for product in self.__products)
         # Формируем строку в требуемом формате
         return f"Категория: {self.name}, количество продуктов: {total_quantity} шт."
+
+    # ДЗ 17.1: Новый метод для подсчета средней цены
+    def middle_price(self) -> float:
+        try:
+            # Считаем сумму всех цен
+            total_price = sum(product.price for product in self.__products)
+            # Считаем количество товаров
+            product_count = len(self.__products)
+            # Вычисляем среднюю цену
+            return total_price / product_count
+        except ZeroDivisionError:
+            # Если товаров нет, возвращаем 0
+            return 0.0

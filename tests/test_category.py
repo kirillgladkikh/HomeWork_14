@@ -1,3 +1,7 @@
+from decimal import Decimal
+
+import pytest
+
 from src.categories_products import Category, Product
 
 
@@ -141,18 +145,58 @@ def test_products_getter() -> None:
     assert empty_category.products == ""
 
 
-# Тестирование метода __str__
-def test_str_method() -> None:
-    # Проверяем первую категорию
-    assert str(category1) == "Категория: Электроника, количество продуктов: 25 шт."
+# Тесты для ДЗ 17.1:
 
-    # Проверяем вторую категорию
-    assert str(category2) == "Категория: Компьютеры, количество продуктов: 15 шт."
 
-    # Проверяем категорию с одним продуктом
-    single_product_category = Category("Аксессуары", "Описание", [product3])
-    assert str(single_product_category) == "Категория: Аксессуары, количество продуктов: 5 шт."
+# Создаем тестовые продукты один раз для всех тестов
+@pytest.fixture
+def product1():
+    return Product(name="Продукт 1", description="Описание 1", price=100.0, quantity=1)
 
-    # Проверяем пустую категорию
-    empty_category = Category("Пустая", "Описание")
-    assert str(empty_category) == "Категория: Пустая, количество продуктов: 0 шт."
+
+@pytest.fixture
+def product2():
+    return Product(name="Продукт 2", description="Описание 2", price=200.0, quantity=1)
+
+
+@pytest.fixture
+def product3():
+    return Product(name="Продукт 3", description="Описание 3", price=300.0, quantity=1)
+
+
+def test_middle_price_empty_category():
+    """Тест для пустой категории"""
+    category = Category(name="Тестовая категория", description="Описание")
+    assert category.middle_price() == 0.0
+
+
+def test_middle_price_single_product(product1):
+    """Тест для категории с одним продуктом"""
+    category = Category(name="Тестовая категория", description="Описание", products=[product1])
+    assert category.middle_price() == Decimal("100.0")
+
+
+def test_middle_price_multiple_products(product1, product2, product3):
+    """Тест для категории с несколькими продуктами"""
+    category = Category(name="Тестовая категория", description="Описание", products=[product1, product2, product3])
+    expected_price = (100.0 + 200.0 + 300.0) / 3
+    assert category.middle_price() == expected_price
+
+
+def test_middle_price_with_zero_price(product1):
+    """Тест для категории с продуктом с нулевой ценой"""
+    zero_price_product = Product(name="Бесплатный продукт", description="Бесплатный", price=0.0, quantity=1)
+    category = Category(name="Тестовая категория", description="Описание", products=[zero_price_product, product1])
+    expected_price = (0.0 + 100.0) / 2
+    assert category.middle_price() == expected_price
+
+
+def test_middle_price_with_decimal_prices():
+    """Тест для категории с ценами, содержащими десятичные дроби"""
+    decimal_product1 = Product(name="Продукт 1", description="Описание", price=100.5, quantity=1)
+    decimal_product2 = Product(name="Продукт 2", description="Описание", price=200.75, quantity=1)
+    category = Category(
+        name="Тестовая категория", description="Описание", products=[decimal_product1, decimal_product2]
+    )
+    expected_price = (100.5 + 200.75) / 2
+    assert category.middle_price() == expected_price

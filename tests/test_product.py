@@ -1,3 +1,5 @@
+import pytest
+
 from src.categories_products import Product
 
 
@@ -59,12 +61,6 @@ def test_price_setter_valid() -> None:
     # Проверяем валидное изменение цены
     product.price = 200.0
     assert product.price == 200.0
-
-
-# def test_price_setter_valid() -> None:
-#     product = Product(name="Test Product", description="Test description", price=100.0, quantity=10)
-#     product.price = 200.0
-#     assert product.price == 200.0
 
 
 def test_price_setter_invalid() -> None:
@@ -140,3 +136,19 @@ def test_add_invalid_type() -> None:
         product1 + [1, 2, 3]
     except TypeError as e:
         assert str(e) == "Сложение возможно только между объектами класса Product"
+
+
+# ДЗ 17.1:
+
+
+def test_quantity_zero():
+    """Тест на обработку нулевого количества"""
+    with pytest.raises(ValueError) as excinfo:
+        Product(name="Тест-продукт", description="Описание продукта", price=100.0, quantity=0)
+    assert str(excinfo.value) == "Товар с нулевым количеством не может быть добавлен"
+
+
+def test_positive_quantity():
+    """Тест на корректное создание продукта с положительным количеством"""
+    product = Product(name="Тест-продукт", description="Описание продукта", price=100.0, quantity=10)
+    assert product.quantity == 10

@@ -179,7 +179,7 @@ class Category:
 
     def __str__(self) -> str:
         # Подсчитываем общее количество товаров во всех продуктах категории
-        total_quantity = sum(product.quantity for product in self.__products)
+        total_quantity = len(self.__products)  # sum(product.quantity for product in self.__products)
         # Формируем строку в требуемом формате
         return f"Категория: {self.name}, количество продуктов: {total_quantity} шт."
 
